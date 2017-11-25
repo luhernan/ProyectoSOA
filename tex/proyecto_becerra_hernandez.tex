@@ -30,7 +30,7 @@ Abstract of the project.
 
 \section{Introduction}
 
-In this document, we present the implementation of a system that simulates a system to schedule I/O tasks, based on the paper by \citeauthor{mogul1997eliminating} \cite{mogul1997eliminating}.
+In this document, we present the implementation of a system that simulates a system to schedule I/O tasks, based on the \citeyear{mogul1997eliminating} paper \citetitle{mogul1997eliminating} by \citeauthor{mogul1997eliminating} \cite{mogul1997eliminating}.
 
 
 \section{Methodology}
@@ -39,13 +39,13 @@ This section describes the system architecture and the theory behind it.
 
 \subsection{Overview of \citetitle{mogul1997eliminating}}
 
-Most OSs use interrupt systems to schedule I/O tasks. There is an alternative to interrupts, which is polling and is seldom used because of the increased latency of responses and excessive overhead. The drawbacks of interrupt systems are that they perform badly under overload and lead to a \textit{receive livelock}, where the system does not make progress on its tasks. The authors present modifications to an interrupt-driven system in order to achieve better performance using polling when the livelock condition is triggered, focusing on high throughput and low latency, as well as avoiding under-performance in other applications.
+At the time of the writing (\citeyear{mogul1997eliminating}), most OSs used interrupt systems to schedule I/O tasks. Polling could be used as an alternative to interrupts, but it was seldom used because of the increased latency of responses and excessive overhead. The drawbacks of interrupt systems are that they perform badly under overload and lead to a \textit{receive livelock}, where the system does not make progress on its tasks. In the paper, \citeauthor{mogul1997eliminating} presented modifications to an interrupt-driven system in order to achieve better performance using polling when the livelock condition is triggered, focusing on high throughput and low latency, as well as avoiding under-performance in other applications.
 
-They describe an interrupt-driven system as follows: when a packet arrives, the CPU is interrupted and preempt all tasks with a lower priority. The packet is placed on a queue and causes a software interrupt so that packet can be further processed. The software interrupt is changed to a lower priority, which means that the processing of the packet can be preempted by subsequent interrupts. So, under a lot of interrupts, the throughput drops to zero and the system gets livelocked. Because of the design of most modern (1996) network adapters, the rationale of giving absolute priority to the first few steps of packet reception is debunked.
+They defined an interrupt-driven system as follows: when a packet arrives, the CPU is interrupted and preempt all tasks with a lower priority. The packet is placed on a queue and causes a software interrupt so that packet can be further processed. The software interrupt is changed to a lower priority, which means that the processing of the packet can be preempted by subsequent interrupts. So, under a lot of interrupts, the throughput drops to zero and the system gets livelocked. Because of the design of most network adapters at the time, the rationale of giving absolute priority to the first few steps of packet reception was debunked.
 
 Three main problems arise in interrupt-driven systems under heavy network input load: 1) receive livelock; 2) increased latency for delivery or forwarding because of the delay in delivery caused by the interrupts; and 3) starvation of packet transmission caused by the default lower priority of transmission in contrast to reception, which in an overloaded system leads to packets awaiting for transmission but the transmission interface is idle.
 
-The techniques the authors propose to avoid receive livelocks are:
+The techniques the authors proposed to avoid receive livelocks were:
 
 \begin{itemize}
 	\item \textbf{Limiting the interrupt arrival rate}: If the rate in which interrupts are imposed on the system is limited, then livelock can be avoided. When a system is about to drop a packet because a queue is full, then input interrupts should be disabled, and be re-enabled when buffer space is available.
@@ -56,13 +56,14 @@ The techniques the authors propose to avoid receive livelocks are:
 
 \end{itemize}
 
-Then they test these techniques on an IP packet router, measuring router performance by counting the number of packets that were successfully forwarded in a given period. They compare an unmodified system against two modifications: one in which a maximum quota on packets processed for the same interface is used, and one with no quota. The result is that with no quotas, the performance is worse than on the unmodified system, but the quotas seem to have a much better performance and reach hardware limits. Then the authors compare performance based on different amounts of quota and see that quota of between 10 and 20 packets yields near-optimum behavior for the hardware they used.
+They tested these techniques on an IP packet router, measuring router performance by counting the number of packets that were successfully forwarded in a given period. They compared an unmodified system against two modifications: one in which a maximum quota on packets processed for the same interface is used, and one with no quota. The result is that with no quotas, the performance is worse than on the unmodified system, but the quotas seem to have a much better performance and reach hardware limits. Then they compared performance based on different amounts of quota and see that quota of between 10 and 20 packets yields near-optimum behavior for the hardware they used.
 
-The final issue that they test was that with the modifications they made, packet processing was successful under overload, but this ignored the fact that user-level processed could be starving. The problem could be improved by measuring how much CPU time is spent in handling received packets and disabling the input when it's above a certain threshold, this threshold being a fraction of the total number of cycles in a period. They find that they can achieve stable behavior with high input rates.
+The final issue that they tested was that with the modifications they made, packet processing was successful under overload, but this ignored the fact that user-level processed could be starving. The problem could be improved by measuring how much CPU time is spent in handling received packets and disabling the input when it's above a certain threshold, this threshold being a fraction of the total number of cycles in a period. They found that they could achieve stable behavior with high input rates.
 
 \subsection{Architecture}
 
 Architecture goes here.
+
 
 \section{Results}
 
