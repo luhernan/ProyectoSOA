@@ -62,7 +62,14 @@ The final issue that they tested was that with the modifications they made, pack
 
 \subsection{Architecture}
 
-Architecture goes here.
+The system was implemented in Java, simulating $k$ I/O devices that are sent to $k$ receiver nodes, in a one-to-one mapping. The architecture can be seen in figure \ref{fig:diagram}, where one can see that each one of the $k$ sending devices is implemented with two threads, one for sending the message and one that is continuously listening and waiting for a signal to start polling. The sending threads (dashed lines) send a message to a middleware server queue which sends these messages to a receiver. The queue has a quota which that if is exceeded, the polling system replaces the interrupt system.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{diagram.png}
+    \caption{Architecture of the simulated system}
+    \label{fig:diagram}
+\end{figure}
 
 
 \section{Results}
