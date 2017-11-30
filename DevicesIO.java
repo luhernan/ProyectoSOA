@@ -4,7 +4,7 @@ import java.io.*;
 
 
 public class DevicesIO implements Runnable {
-   // El valor de esta constante debe tener el mismo valor en las aplicaciones de los clientes
+   // El valor de esta constante debe tener el mismo valor en las aplicaciones de cliente
    static int MAX_DEVICES_THREADS = 0;
 
    static String[] argumentos;
@@ -76,64 +76,17 @@ public class DevicesIO implements Runnable {
          // Se comienzan a enviar paquetes desde la queue a los dispositivos de E/S
          dispositivos[i].start();
                                  
-        // Para dejar que se inicialice el 'dispositivo' correctamente antes de que cambie el puerto
+        // Para dejar que se inicialice el 'dispositivo' correctamente antes de que se actualice el puerto
         try{
           TimeUnit.MICROSECONDS.sleep(500000); // Medio segundo
         }
         catch(Exception e){         
         }
 
-         numPort = numPort + 1;
-      //}
-      //      writer.close();
-
+         numPort = numPort + 1;    
       }
-      //catch(Exception e){}      
+         
       }
-
-
-
-
-     
-
-
-  /*
-   public static void main(String args[]) {
-       //String mensaje = "HelloFromIO Device";
-       //String host = "localhost";
-       //int puerto = 6789;
-
-
-      UDPClient cliente_destino = new UDPClient();
-        
-
-      // Thread que envia informacion
-      Thread t1 = new Thread() {
-
-            @Override
-            public void run() {                                             
-
-               // Para definir un mensaje, host y puerto
-               
-               cliente_destino.recibirPaquetesDestino();                                
-            }
-        };
-        
-        // Se comienzan a enviar paquetes desde las aplicaciones de cliente
-        t1.start();       */ 
-
-        /*
-        try{
-        TimeUnit.SECONDS.sleep(1);
-        }
-        catch(Exception e){         
-        }
-        */
-   //  }
-
-
-
-
 
    } // End-Class
 

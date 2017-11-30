@@ -7,7 +7,7 @@ import java.io.*;
 
 public class UserAPPS implements Runnable{
    static int MAX_USER_APPS_THREADS = 0;
-   static final int MAX_USER_APPS_PACKETS = 200; // Para enviar 50 paquetes en total por aplicacion de usuario
+   static int MAX_USER_APPS_PACKETS = 0; // Para indicar el # total de paquetes a enviar por aplicacion de usuario (por tandas)
    static final int CLIENT_TO_SERVER_QUEUE_PORT = 6789;
 
    static String[] argumentos;
@@ -39,6 +39,7 @@ public class UserAPPS implements Runnable{
       // Este mensaje se reescribe en el metodo "enviarPaquetesCliente"
       String mensaje = "Paquete enviado desde: " + threadName;
       String host = "localhost";
+
       // Todos las aplicaciones de cliente envian al mismo puerto del servidor que contiene la queue
       int puerto = CLIENT_TO_SERVER_QUEUE_PORT;
 
@@ -62,11 +63,13 @@ public class UserAPPS implements Runnable{
    
    // -c : # clientes
    // -p : quota cuando se realiza polling
-   //java UserAPPS -c 3 -p 10
+   // -n : # de paquetes a enviar por cliente, se envian por tandas
+   //java UserAPPS -c 3 -p 10 -n 150
    public static void main(String args[]) {
 
       argumentos = args;
       MAX_USER_APPS_THREADS = Integer.parseInt(argumentos[1]);
+      MAX_USER_APPS_PACKETS = Integer.parseInt(argumentos[5]);
 
       String nombreThread;
              
@@ -75,7 +78,7 @@ public class UserAPPS implements Runnable{
       // Java 7 - compliant
       try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("paquetes_enviados_clientes.txt"), "utf-8"))) {
   
-      for(int j=0; j < MAX_USER_APPS_PACKETS/MAX_USER_APPS_THREADS; j++) // # de tandas - MODIFICAR
+      for(int j=0; j < MAX_USER_APPS_PACKETS/MAX_USER_APPS_THREADS; j++) // # de tandas
 
       for(int i=0; i <= aplicaciones.length-1; i++){                  
        
