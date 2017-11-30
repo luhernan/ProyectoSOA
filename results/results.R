@@ -70,6 +70,8 @@ polling <- read.csv("Polling.csv") %>%
 polling %>% 
   ggplot() +
   geom_point(aes(throughput_sent, throughput_received)) +
+  xlab("Sent packet rate (packets/sec)") +
+  ylab("Received packet rate (packets/sec)") +
   theme_bw()
 
 
@@ -88,6 +90,8 @@ interrupts <- read.csv("Interrupt.csv") %>%
 interrupts %>% 
   ggplot() +
   geom_point(aes(throughput_sent, throughput_received)) +
+  xlab("Sent packet rate (packets/sec)") +
+  ylab("Received packet rate (packets/sec)") +
   theme_bw()
 
 
