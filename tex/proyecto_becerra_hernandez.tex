@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage[pass]{geometry}
 \usepackage[backend=bibtex]{biblatex}
+\usepackage{float}
 \usepackage{amsfonts}
 
 \addbibresource{bibliography.bib} %Imports bibliography file
@@ -63,18 +64,18 @@ The final issue that they tested was that with the modifications they made, pack
 
 \subsection{Architecture}
 
-The system was implemented in Java, simulating $k$ I/O devices that are sent to $k$ receiver nodes, in a one-to-one mapping. The architecture can be seen in figure \ref{fig:arch_diagram}, where one can see that each one of the $k$ sending devices (each represented by a rectangle) is implemented with two threads, one for sending the message and one that is continuously listening and waiting for a signal to start polling. The sending threads (dashed lines) send a message to a middleware server queue which sends these messages to a receiver (represented by circles). The queue has a quota which that if is exceeded, the polling system replaces the interrupt system. The polling system uses a round-robin approach: it first asks client number 1 to send the packets the have and the resend it to the corresponding receiver, then it asks client number 2, and so on. In figure \ref{fig:uml_diagram} the UML of the system is shown.
+The system was implemented in Java, simulating $k$ I/O devices that are sent to $k$ receiver nodes, in a one-to-one mapping. The architecture can be seen in figure \ref{fig:arch_diagram}, where one can see that each one of the $k$ sending devices (each represented by a rectangle) is implemented with two threads, one for sending the message and one that is continuously listening and waiting for a signal to start polling. The sending threads (dashed lines) send a message to a middleware server queue which sends these messages to a receiver (represented by circles). The queue has a quota which that if is exceeded, the polling system replaces the interrupt system. The polling system uses a round-robin approach: it first asks client number 1 to send the packets the have and the resend it to the corresponding receiver, then it asks client number 2, and so on. The pure polling system can be used by setting the queue size to one, that way it overflows since the first message arrives and starts polling the receivers. After there is space in the queue again, the interrupt system is used again. In figure \ref{fig:uml_diagram} the UML of the system is shown.
 
 
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{diagram.png}
     \caption{Architecture of the simulated system}
     \label{fig:arch_diagram}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{UML_seq_diagram.png}
     \caption{UML sequence diagram}
