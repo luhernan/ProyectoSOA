@@ -34,7 +34,7 @@ public class ServerQueue implements Runnable {
         // Se escriben las estadisticas de los paquetes procesados por la queue
         for (Map.Entry entry : resultados.entrySet()) {
             writer.write(entry.getKey() + ", " + entry.getValue() + "\n"); 
-            //System.out.println(entry.getKey() + ", " + entry.getValue() + "\n"); 
+            //System.out.println(entry.getKey() + ", " + entry.getValue() + "\n"); // Para depurar
         }        
           writer.close();
       }
@@ -62,9 +62,8 @@ public class ServerQueue implements Runnable {
 
        String nombreThread;
        ServerQueue serverQueue;
-
        
-       // Este es un solo thread, porque solo se simula una queue
+       // Este es un solo thread, porque se simula una sola queue 
        nombreThread = "Queue";
        serverQueue = new ServerQueue(nombreThread);
        serverQueue.start();    
