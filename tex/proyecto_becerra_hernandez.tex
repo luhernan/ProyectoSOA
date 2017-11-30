@@ -87,7 +87,15 @@ The implementation was carried out by first coding the pure interrupt system. Fo
 
 \section{Results}
 
-Cool results.
+In this section we display detailed results of the tests we made on our implementation. We first compared the input packet rate versus the output packet rage for the interrupt-only system, and then for the hybrid system (interrupt and polling). This means, we measured how many packets per second were sent from all of the clients to the queue, and how many packets per second were sent from the queue to the receiving nodes. We tested different rates, and the results can be seen in figure \ref{fig:polling_rates}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{polling_rates.pdf}
+    \caption{Sent and received rates when polling is used}
+    \label{fig:polling_rates}
+\end{figure}
+
 
 \section{Conclusions}
 
