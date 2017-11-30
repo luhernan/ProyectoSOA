@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage[pass]{geometry}
 \usepackage[backend=bibtex]{biblatex}
+\usepackage{amsfonts}
 
 \addbibresource{bibliography.bib} %Imports bibliography file
 
@@ -30,7 +31,7 @@ Abstract of the project.
 
 \section{Introduction}
 
-In this document, we present the implementation of a system that simulates a system to schedule I/O tasks, based on the \citeyear{mogul1997eliminating} paper \citetitle{mogul1997eliminating} by \citeauthor{mogul1997eliminating} \cite{mogul1997eliminating}.
+In this document, we present the implementation of a program that simulates a system to schedule I/O tasks, based on the \citeyear{mogul1997eliminating} paper \citetitle{mogul1997eliminating} by \citeauthor{mogul1997eliminating} \cite{mogul1997eliminating}. The document is organized as follows: first we present an overview of the original paper, then we explain the architecture and implementation strategy, we follow by showing the results, and finally we end with conclusions and lessons from this work.
 
 
 \section{Methodology}
@@ -62,14 +63,25 @@ The final issue that they tested was that with the modifications they made, pack
 
 \subsection{Architecture}
 
-The system was implemented in Java, simulating $k$ I/O devices that are sent to $k$ receiver nodes, in a one-to-one mapping. The architecture can be seen in figure \ref{fig:diagram}, where one can see that each one of the $k$ sending devices is implemented with two threads, one for sending the message and one that is continuously listening and waiting for a signal to start polling. The sending threads (dashed lines) send a message to a middleware server queue which sends these messages to a receiver. The queue has a quota which that if is exceeded, the polling system replaces the interrupt system.
+The system was implemented in Java, simulating $k$ I/O devices that are sent to $k$ receiver nodes, in a one-to-one mapping. The architecture can be seen in figure \ref{fig:arch_diagram}, where one can see that each one of the $k$ sending devices (each represented by a rectangle) is implemented with two threads, one for sending the message and one that is continuously listening and waiting for a signal to start polling. The sending threads (dashed lines) send a message to a middleware server queue which sends these messages to a receiver (represented by circles). The queue has a quota which that if is exceeded, the polling system replaces the interrupt system. The polling system uses a round-robin approach: it first asks client number 1 to send the packets the have and the resend it to the corresponding receiver, then it asks client number 2, and so on. In figure \ref{fig:uml_diagram} the UML of the system is shown.
+
+
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.85\textwidth]{diagram.png}
     \caption{Architecture of the simulated system}
-    \label{fig:diagram}
+    \label{fig:arch_diagram}
 \end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.95\textwidth]{UML_seq_diagram.png}
+    \caption{UML sequence diagram}
+    \label{fig:uml_diagram}
+\end{figure}
+
+The implementation was carried out by first coding the pure interrupt system. For this, each user thread sends $m$ packets in batches of $n$ packets each (these parameters are chosen by the user). These packets are sent to the queue where they are kept until there is an interruption, which in this case means that there are $50i$ items in the queue, with $i \in \mathbb{N}$. When the queue starts resending the packets, the senders may still send packets but they are lost because the queue is busy so it cannot attend these requests. After this, the polling round-robin system was implemented. As mentioned before, for each client there is a special user thread that is listening and waiting for the signal to start polling. The implementation can be run on any computer with the JVM and the Java compiler.
 
 
 \section{Results}
