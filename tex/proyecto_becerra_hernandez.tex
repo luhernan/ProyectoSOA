@@ -25,12 +25,6 @@
 
 \maketitle
 
-\begin{abstract}
-
-Abstract of the project.
-
-\end{abstract}
-
 \section{Introduction}
 
 In this document, we present the implementation of a program that simulates a system to schedule I/O tasks, based on the \citeyear{mogul1997eliminating} paper \citetitle{mogul1997eliminating} by \citeauthor{mogul1997eliminating} \cite{mogul1997eliminating}. The document is organized as follows: first we present an overview of the original paper, then we explain the architecture and implementation strategy, we follow by showing the results, and finally we end with conclusions and lessons from this work.
@@ -128,7 +122,7 @@ In each of the experiments, the number of total messages sent was chosen a prior
 
 In figure \ref{fig:percentage_received}, we see the number of packages sent by all clients versus the percentage of packages received for each of the experiments and type of system. These plots show that there is no apparent pattern between the number of packages sent and the percentage of lost packages in transmission.
 
-We believe that these results are due to the OS scheduler that efficiently handles the packets that are sent, so we cannot stress the threads enough so that the results of the paper were successfully replicated with our implementation.
+We believe that these results are due to the OS scheduler that efficiently handles the packets that are sent even when the queue size is really small, so we cannot stress the threads enough so that the results of the paper were successfully replicated with our implementation.
 
 \begin{figure}[H]
     \centering
@@ -153,10 +147,13 @@ We believe that these results are due to the OS scheduler that efficiently handl
     \label{fig:percentage_received}
 \end{figure}
 
+
+
 \section{Conclusions}
 
-Nice conclusions.
+In this work we implemented a program that intends to replicate the work done in \citetitle{mogul1997eliminating} \cite{mogul1997eliminating}. The theory in the paper was followed in the implementation, but nevertheless the results achieved are not aligned with the ones that are shown in the article, and we believe this is because our implementation is superseded by the more efficient OS scheduler, so the threads are not sufficiently stressed to cause a livelock in the computer. 
 
+One of the things we learned in this project was that threads are hard to work with, and some unintuitive results can happen when working with them, things that would not happen when working with a sequential programming paradigm.
 
 \printbibliography
 %\nocite{*}
