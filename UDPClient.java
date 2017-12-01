@@ -160,7 +160,7 @@ public class UDPClient{
 
       // Delay para simular que deje de enviar paquetes
       try{
-        TimeUnit.MILLISECONDS.sleep(10);
+        TimeUnit.MILLISECONDS.sleep(100);
       }
       catch(Exception e){}
 
