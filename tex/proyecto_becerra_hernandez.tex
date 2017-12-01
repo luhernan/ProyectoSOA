@@ -8,6 +8,7 @@
 \usepackage[backend=bibtex]{biblatex}
 \usepackage{float}
 \usepackage{amsfonts}
+\usepackage{parskip}
 
 \addbibresource{bibliography.bib} %Imports bibliography file
 
@@ -82,8 +83,40 @@ The system was implemented in Java, simulating $k$ I/O devices that are sent to 
     \label{fig:uml_diagram}
 \end{figure}
 
+
+\section{Implementation and execution}
+
 The implementation was carried out by first coding the pure interrupt system. For this, each user thread sends $m$ packets in batches of $n$ packets each (these parameters are chosen by the user). These packets are sent to the queue where they are kept until there is an interruption, which in this case means that there are $50i$ items in the queue, with $i \in \mathbb{N}$. When the queue starts resending the packets, the senders may still send packets but they are lost because the queue is busy so it cannot attend these requests. After this, the polling round-robin system was implemented. As mentioned before, for each client there is a special user thread that is listening and waiting for the signal to start polling. The implementation can be run on any computer with the JVM and the Java compiler.
 
+To compile the program with the \texttt{javac} compiler, the following command must be run:
+
+\texttt{\$ javac UDPClient.java UserAPPS.java ServerQueue.java DevicesIO.java}
+
+After this, three commands must be executed independently. The first command executes the file that contains the class that simulates the I/O devices called \texttt{DevicesIO}. For instance, to run the interrupt system, one has to execute:
+
+\texttt{\$ java DevicesIO -c 50 -p 0 -n 100}
+
+And to run the polling system with a quota of 10, one has to execute:
+
+\texttt{\$ java DevicesIO -c 30 -p 10 -n 100}
+
+Here we notice the \texttt{-c, -p, -n} parameters. These parameters must always be present and the order shall not be changed. The \texttt{n} parameter specifies how many packets will be sent, and the \texttt{c} parameter specifies the number of clients. The \texttt{p} parameter controls the quota of the queue. To use interrupts, the value of the parameter must be \texttt{0}.
+
+After executing the \texttt{DevicesIO} file, one must execute the class that simulates the queue to receive and dispatch the packets. This is done with either of the following commands, the first one for interrupt system and the second one for the polling system:
+
+\texttt{\$ java ServerQueue -c 50 -p 0 -n 100 > output.txt}
+
+\texttt{\$ java ServerQueue -c 30 -p 10 -n 100 > output.txt}
+
+To save the statistics that are generated, it is suggested to save the output to a file like done in the previous lines. This is done this way because in previous attempts, the delay from saving to disk created inconsistencies in the numbers.
+
+Finally, to start the simulation, it is necessary to execute the class that takes care of sending the packets, this is done in the \texttt{UsedAPPS} file. For the interrupt system we run:
+
+\texttt{java UserAPPS -c 50 -p 0 -n 100}
+
+And for the polling system we run:
+
+\texttt{java UserAPPS -c 30 -p 10 -n 100}
 
 \section{Results}
 
