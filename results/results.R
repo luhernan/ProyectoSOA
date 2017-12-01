@@ -65,7 +65,8 @@ polling <- read.csv("Polling.csv") %>%
          sec_diff_received = as.numeric(difftime(ultima_hora_recibido, primera_hora_recibido, 
                                                  units = "sec"))) %>% 
   mutate(throughput_sent = Num_paquetes_total/sec_diff_sent,
-         throughput_received = num_paquetes_recibidos/sec_diff_received)
+         throughput_received = num_paquetes_recibidos/sec_diff_received,
+         percentage_received = num_paquetes_recibidos/Num_paquetes_total)
 
 
 
@@ -79,7 +80,24 @@ polling2 <- read.csv("Polling/polling2.csv") %>%
          sec_diff_received = as.numeric(difftime(ultima_hora_recibido, primera_hora_recibido, 
                                              units = "sec"))) %>% 
   mutate(throughput_sent = Num_paquetes_total/sec_diff_sent,
-         throughput_received = num_paquetes_recibidos/sec_diff_received)
+         throughput_received = num_paquetes_recibidos/sec_diff_received,
+         percentage_received = num_paquetes_recibidos/Num_paquetes_total)
+
+polling %>% 
+  mutate(experiment = 1) %>% 
+  bind_rows(
+    polling2 %>% 
+      mutate(experiment = 2)
+  ) %>% 
+  ggplot() +
+  geom_point(aes(throughput_sent, throughput_received)) +
+  xlab("Sent packet rate (packets/sec)") +
+  ylab("Received packet rate (packets/sec)") +
+  facet_wrap(~experiment, scales = 'free') +
+  theme_bw()
+
+  
+  
 
 polling %>% 
   ggplot() +
@@ -107,7 +125,8 @@ interrupts <- read.csv("Interrupt.csv") %>%
          sec_diff_received = as.numeric(difftime(ultima_hora_recibido, primera_hora_recibido, 
                                                  units = "sec"))) %>% 
   mutate(throughput_sent = Num_paquetes_total/sec_diff_sent,
-         throughput_received = num_paquetes_recibidos/sec_diff_received)
+         throughput_received = num_paquetes_recibidos/sec_diff_received,
+         percentage_received = num_paquetes_recibidos/Num_paquetes_total)
 
 interrupts %>% 
   ggplot() +
@@ -131,3 +150,41 @@ interrupts %>%
   theme_bw()
 
 
+polling %>% 
+  mutate(type = "Polling") %>% 
+  bind_rows(
+    polling2 %>% 
+      mutate(type = "Polling 2")
+    ) %>% 
+  bind_rows(
+    interrupts %>% 
+      mutate(type = "Interrupt")
+  ) %>% 
+  ggplot() +
+  geom_point(aes(Num_paquetes_total, percentage_received)) +
+  xlab("Number of sent packets") +
+  ylab("Percentage of received packets") +
+  facet_wrap(~type) +
+  theme_bw()
+
+
+polling %>% 
+  ggplot() +
+  geom_point(aes(Num_paquetes_total, percentage_received)) +
+  xlab("Number of sent packets") +
+  ylab("Percentage of received packets") +
+  theme_bw()
+
+polling2 %>% 
+  ggplot() +
+  geom_point(aes(Num_paquetes_total, percentage_received)) +
+  xlab("Number of sent packets") +
+  ylab("Percentage of received packets") +
+  theme_bw()
+
+interrupts %>% 
+  ggplot() +
+  geom_point(aes(Num_paquetes_total, percentage_received)) +
+  xlab("Number of sent packets") +
+  ylab("Percentage of received packets") +
+  theme_bw()

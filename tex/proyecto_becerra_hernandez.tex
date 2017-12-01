@@ -14,7 +14,7 @@
 
 \begin{document}
 
-\newgeometry{bottom=2.5cm, left=2.1cm,right=2.1cm,top=2.5cm}
+\newgeometry{bottom=2.8cm, left=2.8cm,right=2.8cm,top=2.8cm}
 
 \title{Advanced operating Systems \\ Final project}
 
@@ -120,15 +120,38 @@ And for the polling system we run:
 
 \section{Results}
 
-In this section we display detailed results of the tests we made on our implementation. We first compared the input packet rate versus the output packet rage for the interrupt-only system, and then for the hybrid system (interrupt and polling). This means, we measured how many packets per second were sent from all of the clients to the queue, and how many packets per second were sent from the queue to the receiving nodes. We tested different rates, and the results can be seen in figure \ref{fig:polling_rates}.
+In this section we display detailed results of the tests we made on our implementation. All results were run on a MacBook Pro (17-inch, late 2011) with macOS Sierra version 10.12.6, Intel Core i7 2.4 GHz, 4 hyperthreading cores and 8 GB of RAM.
+
+We first compared the input packet rate versus the output packet rage for the interrupt-only system, and then for the hybrid system (interrupt and polling). This means, we measured how many packets per second were sent from all of the clients to the queue, and how many packets per second were sent from the queue to the receiving nodes. We tested different rates, and the results can be seen in figures \ref{fig:interrupt_rates} and \ref{fig:polling_rates}.
+
+In each of the experiments, the number of total messages sent was chosen a priori in a fixed time, but as can be seen in the figures, the throughput did not vary much. And even more, there is not much difference between the interrupt system and the polling system. The outliers are probably caused by variation in the OS scheduler.
+
+In figure \ref{fig:percentage_received}, we see the number of packages sent by all clients versus the percentage of packages received for each of the experiments and type of system. These plots show that there is no apparent pattern between the number of packages sent and the percentage of lost packages in transmission.
+
+We believe that these results are due to the OS scheduler that efficiently handles the packets that are sent, so we cannot stress the threads enough so that the results of the paper were successfully replicated with our implementation.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{polling_rates.pdf}
-    \caption{Sent and received rates when polling is used}
+    \includegraphics[width=0.75\textwidth]{interrupt_rates.pdf}
+    \caption{Sent and received rates when a pure interrupt system is used}
+    \label{fig:interrupt_rates}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{polling_rates.pdf}
+    \caption{Sent and received rates when the hybrid system is used (polling and interrupts)}
     \label{fig:polling_rates}
 \end{figure}
 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{number_packets_vs_percentage_received.pdf}
+    \caption{Number of packets sent vs. percentage of packets received}
+    \label{fig:percentage_received}
+\end{figure}
 
 \section{Conclusions}
 
