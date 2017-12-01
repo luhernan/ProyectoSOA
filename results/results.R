@@ -63,6 +63,20 @@ polling <- read.csv("Polling.csv") %>%
   mutate(sec_diff_sent = as.numeric(difftime(ultima_hora_enviado, primera_hora_enviado, 
                                              units = "sec")),
          sec_diff_received = as.numeric(difftime(ultima_hora_recibido, primera_hora_recibido, 
+                                                 units = "sec"))) %>% 
+  mutate(throughput_sent = Num_paquetes_total/sec_diff_sent,
+         throughput_received = num_paquetes_recibidos/sec_diff_received)
+
+
+
+polling2 <- read.csv("Polling/polling2.csv") %>% 
+  mutate(primera_hora_enviado = as.POSIXct(primera_hora_enviado, format = "%H:%M:%OS"),
+         ultima_hora_enviado = as.POSIXct(ultima_hora_enviado, format = "%H:%M:%OS"),
+         primera_hora_recibido = as.POSIXct(primera_hora_recibido, format = "%H:%M:%OS"),
+         ultima_hora_recibido = as.POSIXct(ultima_hora_recibido, format = "%H:%M:%OS")) %>% 
+  mutate(sec_diff_sent = as.numeric(difftime(ultima_hora_enviado, primera_hora_enviado, 
+                                             units = "sec")),
+         sec_diff_received = as.numeric(difftime(ultima_hora_recibido, primera_hora_recibido, 
                                              units = "sec"))) %>% 
   mutate(throughput_sent = Num_paquetes_total/sec_diff_sent,
          throughput_received = num_paquetes_recibidos/sec_diff_received)
@@ -73,6 +87,14 @@ polling %>%
   xlab("Sent packet rate (packets/sec)") +
   ylab("Received packet rate (packets/sec)") +
   theme_bw()
+
+polling2 %>% 
+  ggplot() +
+  geom_point(aes(throughput_sent, throughput_received)) +
+  xlab("Sent packet rate (packets/sec)") +
+  ylab("Received packet rate (packets/sec)") +
+  theme_bw()
+
 
 
 interrupts <- read.csv("Interrupt.csv") %>% 
@@ -94,5 +116,18 @@ interrupts %>%
   ylab("Received packet rate (packets/sec)") +
   theme_bw()
 
+
+interrupts %>%
+  mutate(type = "Interrupts") %>% 
+  bind_rows(
+    polling %>% 
+      mutate(type = "Polling")
+  ) %>% 
+  ggplot(aes(throughput_sent, throughput_received, color = type)) +
+  geom_point() +
+  #geom_smooth(se = F) +
+  xlab("Sent packet rate (packets/sec)") +
+  ylab("Received packet rate (packets/sec)") +
+  theme_bw()
 
 
